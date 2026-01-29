@@ -1,3 +1,5 @@
+import { Theme } from '@radix-ui/themes';
+import '@radix-ui/themes/styles.css';
 import type { Metadata } from 'next';
 import NavBar from './NavBar';
 import './globals.css';
@@ -14,10 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <NavBar />
-        <main>{children}</main>
-      </body>
+      <Theme>
+        <body>
+          <NavBar />
+          <main>{children}</main>
+        </body>
+      </Theme>
     </html>
   );
 }
