@@ -1,9 +1,15 @@
 import { Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import NavBar from './NavBar';
 import './globals.css';
+import './theme-config.css';
 
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
 export const metadata: Metadata = {
   title: 'BugStack',
   description: 'BugStack is a platform for tracking issues',
@@ -16,8 +22,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Theme>
+      <body className={inter.variable}>
+        <Theme accentColor="violet">
           <NavBar />
           <main className="p-5">{children}</main>
         </Theme>
