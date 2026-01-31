@@ -1,4 +1,4 @@
-import { Heading, Text } from '@radix-ui/themes';
+import { Card, Flex, Heading, Text } from '@radix-ui/themes';
 import delay from 'delay';
 import { notFound } from 'next/navigation';
 import { prisma } from '../../../prisma/client';
@@ -28,9 +28,13 @@ const IssueDetailPage = async ({ params }: Props) => {
   return (
     <div>
       <Heading>{issue?.title}</Heading>
-      <Text>{issue?.description}</Text>
-      <IssueStatusBadge status={issue.status} />
-      <Text>{issue.createdAt.toDateString()}</Text>
+      <Flex gap="4" my="2">
+        <IssueStatusBadge status={issue.status} />
+        <Text>{issue.createdAt.toDateString()}</Text>
+      </Flex>
+      <Card>
+        <Text>{issue?.description}</Text>
+      </Card>
     </div>
   );
 };
