@@ -1,5 +1,5 @@
 'use client';
-import { createIssueSchema } from '@/app/validationSchemas';
+import { IssueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Callout, Spinner, TextField } from '@radix-ui/themes';
 import axios from 'axios';
@@ -16,7 +16,7 @@ const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof IssueSchema>;
 
 const IssueForm = ({ issue }: { issue?: Issue }) => {
   const router = useRouter();
@@ -26,7 +26,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     control,
     formState: { errors },
   } = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(IssueSchema),
   });
 
   const [error, setError] = useState('');

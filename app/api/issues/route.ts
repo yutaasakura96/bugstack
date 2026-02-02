@@ -1,11 +1,11 @@
 import { prisma } from '@/prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createIssueSchema } from '../../validationSchemas';
+import { IssueSchema } from '../../validationSchemas';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const validation = createIssueSchema.safeParse(body);
+  const validation = IssueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json({ errors: z.flattenError(validation.error) }, { status: 400 });
   }
