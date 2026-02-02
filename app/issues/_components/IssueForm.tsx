@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { Issue } from '../../../generated/prisma/client';
 import ErrorMessage from '../../components/ErrorMessage';
 
+// TODO: Fix Hydration issue with SimpleMDE
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
