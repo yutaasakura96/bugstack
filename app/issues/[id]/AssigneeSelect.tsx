@@ -7,32 +7,25 @@ import { Issue, User } from '../../../generated/prisma/client';
 import { Skeleton } from '../../components';
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery<User[], Error>({
-    queryKey: ['users'],
-    queryFn: () => axios.get<User[]>('/api/users').then((res) => res.data),
-    staleTime: 60 * 1000,
-    retry: 3,
-  });
+  const { data: users, error, isLoading } = useUsers();
   if (isLoading) return <Skeleton height="2rem" />;
   if (error) return null;
+
+  const assignIssue = async (userId: string) => {
+    try {
+      await axios.patch(`/api/issues/${issue.id}`, {
+        assignedToUserId: userId === 'unassigned' ? null : userId,
+      });
+      toast.success('Issue assigned successfully');
+    } catch (error) {
+      toast.error('Failed to assign issue');
+    }
+  };
   return (
     <>
       <Select.Root
         defaultValue={issue.assignedToUserId || 'unassigned'}
-        onValueChange={async (userId) => {
-          try {
-            await axios.patch(`/api/issues/${issue.id}`, {
-              assignedToUserId: userId === 'unassigned' ? null : userId,
-            });
-            toast.success('Issue assigned successfully');
-          } catch (error) {
-            toast.error('Failed to assign issue');
-          }
-        }}
+        onValueChange={assignIssue}
       >
         <Select.Trigger placeholder="Assign to..." />
         <Select.Content>
@@ -50,6 +43,15 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       <Toaster />
     </>
   );
+};
+
+const useUsers = () => {
+  return useQuery<User[], Error>({
+    queryKey: ['users'],
+    queryFn: () => axios.get<User[]>('/api/users').then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+  });
 };
 
 export default AssigneeSelect;
