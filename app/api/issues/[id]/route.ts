@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '../../../../prisma/client';
 import authOptions from '../../../auth/authOptions';
-import { IssueSchema } from '../../../validationSchemas';
+import { patchIssueSchema } from '../../../validationSchemas';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
@@ -12,10 +12,20 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
   const { id } = await params;
   const body = await request.json();
-  const validation = IssueSchema.safeParse(body);
+  const validation = patchIssueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json({ errors: z.flattenError(validation.error) }, { status: 400 });
   }
+  const { assignedToUserId, title, description } = body;
+  if (assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: { id: assignedToUserId },
+    });
+    if (!user) {
+      return NextResponse.json({ error: 'Invalid User' }, { status: 400 });
+    }
+  }
+
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(id) },
   });
@@ -26,8 +36,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const updatedIssue = await prisma.issue.update({
     where: { id: parseInt(id) },
     data: {
-      title: body.title,
-      description: body.description,
+      title,
+      description,
+      assignedToUserId,
     },
   });
   return NextResponse.json(updatedIssue);

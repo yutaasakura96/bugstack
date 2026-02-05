@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import authOptions from '../../auth/authOptions';
-import { IssueSchema } from '../../validationSchemas';
+import { issueSchema } from '../../validationSchemas';
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const body = await request.json();
-  const validation = IssueSchema.safeParse(body);
+  const validation = issueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json({ errors: z.flattenError(validation.error) }, { status: 400 });
   }
