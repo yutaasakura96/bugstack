@@ -1,6 +1,6 @@
 'use client';
 import { Select } from '@radix-ui/themes';
-import { Status } from '../../generated/prisma/client';
+import { Status } from '../../../generated/prisma/client';
 
 const IssueStatusFilter = () => {
   const statuses: { label: string; value: Status }[] = [
