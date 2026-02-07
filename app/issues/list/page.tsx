@@ -7,7 +7,7 @@ import { prisma } from '../../../prisma/client';
 import IssueActions from './IssueActions';
 
 interface Props {
-  searchParams: { status?: Status; orderBy: keyof Issue };
+  searchParams: { status?: Status; orderBy?: keyof Issue };
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
@@ -36,10 +36,18 @@ const IssuesPage = async ({ searchParams }: Props) => {
   const statuses = Object.values(Status);
   const validStatus = status && statuses.includes(status) ? status : undefined;
 
+  const validOrderBy =
+    orderBy && columns.some((col) => col.value === orderBy) ? orderBy : undefined;
+
   const issues = await prisma.issue.findMany({
     where: {
-      status: validStatus,
+      ...(validStatus && { status: validStatus }),
     },
+    ...(validOrderBy && {
+      orderBy: {
+        [validOrderBy]: 'asc',
+      },
+    }),
   });
   // TODO: Add Descending order sort
   return (
