@@ -1,4 +1,5 @@
 import { Flex } from '@radix-ui/themes';
+import { Metadata } from 'next';
 import { Status } from '../../../generated/prisma/client';
 import { prisma } from '../../../prisma/client';
 import Pagination from '../../components/Pagination';
@@ -49,3 +50,8 @@ const IssuesPage = async ({ searchParams }: Props) => {
 export const dynamic = 'force-dynamic';
 
 export default IssuesPage;
+
+export const metadata: Metadata = {
+  title: 'BugStack - Issue List',
+  description: 'View all issues',
+};

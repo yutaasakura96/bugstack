@@ -46,4 +46,23 @@ const IssueDetailPage = async ({ params }: Props) => {
   );
 };
 
+export async function generateMetadata({ params }: Props) {
+  const { id } = await params;
+  const issue = await prisma.issue.findUnique({
+    where: { id: parseInt(id) },
+  });
+
+  if (!issue) {
+    return {
+      title: 'BugStack - Issue Not Found',
+      description: 'The requested issue could not be found',
+    };
+  }
+
+  return {
+    title: `BugStack - ${issue.title}`,
+    description: `Details of issue ${issue.id}`,
+  };
+}
+
 export default IssueDetailPage;

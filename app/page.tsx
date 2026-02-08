@@ -1,4 +1,5 @@
 import { Flex, Grid } from '@radix-ui/themes';
+import { Metadata } from 'next';
 import { prisma } from '../prisma/client';
 import IssueChart from './IssueChart';
 import IssueSummary from './IssueSummary';
@@ -24,3 +25,8 @@ export default async function Home() {
     </Grid>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'BugStack - Dashboard',
+  description: 'BugStack is a platform for tracking issues',
+};
