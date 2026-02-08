@@ -4,10 +4,11 @@ import { Table } from '@radix-ui/themes';
 import NextLink from 'next/link';
 import { Issue, Status } from '../../../generated/prisma/client';
 import { prisma } from '../../../prisma/client';
+import Pagination from '../../components/Pagination';
 import IssueActions from './IssueActions';
 
 interface Props {
-  searchParams: { status?: Status; orderBy?: keyof Issue };
+  searchParams: { status?: Status; orderBy?: keyof Issue; page?: string };
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
@@ -32,12 +33,15 @@ const IssuesPage = async ({ searchParams }: Props) => {
     },
   ];
 
-  const { status, orderBy } = await searchParams;
+  const { status, orderBy, page } = await searchParams;
   const statuses = Object.values(Status);
   const validStatus = status && statuses.includes(status) ? status : undefined;
 
   const validOrderBy =
     orderBy && columns.some((col) => col.value === orderBy) ? orderBy : undefined;
+
+  const validPage = page ? parseInt(page) : 1;
+  const pageSize = 10;
 
   const issues = await prisma.issue.findMany({
     where: {
@@ -48,6 +52,14 @@ const IssuesPage = async ({ searchParams }: Props) => {
         [validOrderBy]: 'asc',
       },
     }),
+    skip: (validPage - 1) * pageSize,
+    take: pageSize,
+  });
+
+  const totalCount = await prisma.issue.count({
+    where: {
+      ...(validStatus && { status: validStatus }),
+    },
   });
   // TODO: Add Descending order sort
   return (
@@ -91,6 +103,9 @@ const IssuesPage = async ({ searchParams }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
+      <div className="mt-5">
+        <Pagination itemCount={totalCount} pageSize={pageSize} currentPage={validPage} />
+      </div>
     </div>
   );
 };
