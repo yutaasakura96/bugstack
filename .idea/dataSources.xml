@@ -8,11 +8,11 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/bugstack</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="postgres@localhost" uuid="8595d8c8-b208-44ad-a3d0-2c457406622d">
+    <data-source source="LOCAL" name="bugstack@localhost" uuid="6f142e91-b098-42bb-b437-6805eb049a97">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/bugstack</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
