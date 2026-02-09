@@ -10,18 +10,20 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 model Issue {
   id               Int      @id @default(autoincrement())
   title            String   @db.VarChar(255)
-  description      String   @db.Text
+  description      String
   status           Status   @default(OPEN)
-  assignedToUserId String?  @db.VarChar(255)
+  assignedToUserId String?
   assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id])
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  @@index([assignedToUserId])
 }
 
 enum Status {
@@ -39,7 +41,6 @@ model User {
   image          String?
   accounts       Account[]
   sessions       Session[]
-  // Optional for WebAuthn support
   Authenticator  Authenticator[]
   assignedIssues Issue[]
   createdAt      DateTime        @default(now())
@@ -48,19 +49,19 @@ model User {
 
 model Account {
   id                       String  @id @default(cuid())
-  userId                   String  @unique
+  userId                   String
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String? @db.Text
-  access_token             String? @db.Text
+  refresh_token            String?
+  access_token             String?
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String? @db.Text
+  id_token                 String?
   session_state            String?
   refresh_token_expires_in Int?
-  user                     User?   @relation(fields: [userId], references: [id])
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -74,7 +75,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
