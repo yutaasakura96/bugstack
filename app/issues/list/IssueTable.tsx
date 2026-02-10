@@ -1,5 +1,5 @@
 import { IssueStatusBadge, Link } from '@/app/components';
-import { ArrowUpIcon } from '@radix-ui/react-icons';
+import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
 import { Table } from '@radix-ui/themes';
 import NextLink from 'next/link';
 import { Issue, Status } from '../../../generated/prisma/client';
@@ -7,33 +7,46 @@ import { Issue, Status } from '../../../generated/prisma/client';
 export interface IssueQuery {
   status?: Status;
   orderBy?: keyof Issue;
+  orderDirection?: 'asc' | 'desc';
   page?: string;
 }
 
 interface Props {
   issues: Issue[];
   orderBy?: keyof Issue;
+  orderDirection?: 'asc' | 'desc';
   status?: Status;
 }
 
-const IssueTable = ({ issues, orderBy, status }: Props) => {
+const IssueTable = ({ issues, orderBy, orderDirection, status }: Props) => {
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
-          {columns.map((column) => (
-            <Table.ColumnHeaderCell key={column.value} className={column.className}>
-              <NextLink
-                href={{
-                  pathname: '/issues/list',
-                  query: { status, orderBy: column.value },
-                }}
-              >
-                {column.label}
-              </NextLink>
-              {column.value === orderBy && <ArrowUpIcon className="inline" />}
-            </Table.ColumnHeaderCell>
-          ))}
+          {columns.map((column) => {
+            const isCurrentColumn = column.value === orderBy;
+            const newOrderDirection = isCurrentColumn && orderDirection === 'asc' ? 'desc' : 'asc';
+            
+            return (
+              <Table.ColumnHeaderCell key={column.value} className={column.className}>
+                <NextLink
+                  href={{
+                    pathname: '/issues/list',
+                    query: { status, orderBy: column.value, orderDirection: newOrderDirection },
+                  }}
+                >
+                  {column.label}
+                </NextLink>
+                {isCurrentColumn && (
+                  orderDirection === 'desc' ? (
+                    <ArrowDownIcon className="inline" />
+                  ) : (
+                    <ArrowUpIcon className="inline" />
+                  )
+                )}
+              </Table.ColumnHeaderCell>
+            );
+          })}
         </Table.Row>
       </Table.Header>
 

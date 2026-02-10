@@ -11,11 +11,12 @@ interface Props {
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
-  const { status, orderBy, page } = await searchParams;
+  const { status, orderBy, orderDirection, page } = await searchParams;
   const statuses = Object.values(Status);
   const validStatus = status && statuses.includes(status) ? status : undefined;
 
   const validOrderBy = orderBy && columnNames.includes(orderBy) ? orderBy : undefined;
+  const validOrderDirection = orderDirection === 'desc' ? 'desc' : 'asc';
 
   const validPage = page ? parseInt(page) : 1;
   const pageSize = 10;
@@ -26,7 +27,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
     },
     ...(validOrderBy && {
       orderBy: {
-        [validOrderBy]: 'asc',
+        [validOrderBy]: validOrderDirection,
       },
     }),
     skip: (validPage - 1) * pageSize,
@@ -38,11 +39,11 @@ const IssuesPage = async ({ searchParams }: Props) => {
       ...(validStatus && { status: validStatus }),
     },
   });
-  // TODO: Add Descending order sort
+
   return (
     <Flex direction="column" gap="5">
       <IssueActions />
-      <IssueTable issues={issues} orderBy={validOrderBy} status={validStatus} />
+      <IssueTable issues={issues} orderBy={validOrderBy} orderDirection={validOrderDirection} status={validStatus} />
       <Pagination itemCount={totalCount} pageSize={pageSize} currentPage={validPage} />
     </Flex>
   );
