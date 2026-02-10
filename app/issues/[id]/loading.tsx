@@ -1,18 +1,34 @@
-import { Box, Card, Flex } from '@radix-ui/themes';
+import { Box, Card, Flex, Grid } from '@radix-ui/themes';
 import { Skeleton } from '@/app/components';
 
 const LoadingIssueDetailPage = () => {
   return (
-    <Box>
-      <Skeleton className="max-w-xl" />
-      <Flex gap="4" my="2">
-        <Skeleton width="5rem" />
-        <Skeleton width="8rem" />
-      </Flex>
-      <Card mt="4" className="prose">
-        <Skeleton count={3} />
-      </Card>
-    </Box>
+    <Grid columns={{ initial: '1', sm: '5' }} gap="5">
+      <Box className="md:col-span-4">
+        <Skeleton className="max-w-xl" />
+        <Flex gap="4" my="2">
+          <Skeleton width="5rem" />
+          <Skeleton width="8rem" />
+        </Flex>
+        <Card mt="4" className="prose">
+          <Skeleton count={3} />
+        </Card>
+      </Box>
+      <Box>
+        <Flex direction="column" gap="4">
+          <Flex direction="column" gap="2">
+            <Skeleton width="4rem" />
+            <Skeleton height="2rem" />
+          </Flex>
+          <Flex direction="column" gap="2">
+            <Skeleton width="5rem" />
+            <Skeleton height="2rem" />
+          </Flex>
+          <Skeleton height="2rem" />
+          <Skeleton height="2rem" />
+        </Flex>
+      </Box>
+    </Grid>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Flex, Grid } from '@radix-ui/themes';
+import { Box, Flex, Grid, Text } from '@radix-ui/themes';
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -38,8 +38,14 @@ const IssueDetailPage = async ({ params }: Props) => {
       {session && (
         <Box>
           <Flex direction="column" gap="4">
-            <StatusSelect issue={issue} />
-            <AssigneeSelect issue={issue} />
+            <Flex direction="column" gap="2">
+              <Text className="font-bold">Status</Text>
+              <StatusSelect issue={issue} />
+            </Flex>
+            <Flex direction="column" gap="2">
+              <Text className="font-bold">Assignee</Text>
+              <AssigneeSelect issue={issue} />
+            </Flex>
             <EditIssueButton issueId={issue.id} />
             <DeleteIssueButton issueId={issue.id} />
           </Flex>

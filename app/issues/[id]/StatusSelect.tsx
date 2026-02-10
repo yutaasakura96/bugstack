@@ -4,9 +4,12 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 import { Issue, Status } from '../../../generated/prisma/client';
+import { Skeleton } from '../../components';
 
-const StatusSelect = ({ issue }: { issue: Issue }) => {
+const StatusSelect = ({ issue, isLoading = false }: { issue: Issue; isLoading?: boolean }) => {
   const router = useRouter();
+
+  if (isLoading) return <Skeleton height="2rem" />;
 
   const updateStatus = async (status: Status) => {
     try {
